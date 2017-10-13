@@ -11,13 +11,14 @@ $(function(){
     }
 
     // construct network
+    var IMG_DIR = 'img/'
     var nodes = null;
     var edges = null;
     var network = null;
     var data = {
-        nodes: [{id: 0, label: '1230'}, {id: 1, label: '1123'}, {id: 2, label: '1232'},
-        {id: 10, label: '0'}, {id: 11, label: '1'}, {id: 12, label: '2'},
-        {id: 20, label: '0'}, {id: 21, label: '1'}, {id: 22, label: '2'}],
+        nodes: [{id: 0, image: IMG_DIR + 'F000.png', shape: 'image'},
+                {id: 1, image: IMG_DIR + 'F001.png', shape: 'image'},
+                {id: 2, image: IMG_DIR + 'F002.png', shape: 'image'}],
         edges: []
     }
 
@@ -42,16 +43,17 @@ $(function(){
                 addNode: false,
                 deleteNode: false,
                 addEdge: function (data, callback) {
-                    if (data.from != data.to) {
+                    if (data.from != data.to  && network.getConnectedNodes(data.from).indexOf(data.to) == -1) {
+                        // not the same node and the two nodes are not connected
                         callback(data);
+                        $('#submit').removeClass('disabled');
                     }
-                    $('#submit').removeClass('disabled');
                 }
             },
             edges: {
                 color: {
                     color: 'black',
-                    highlight:'grey'
+                    highlight:'#f0ad4e'
                 },
                 width: 2,
             },
@@ -76,10 +78,16 @@ $(function(){
     }
 
     // set up buttons
-    $('#reset').click(draw);
+    $('#reset').click(function() {
+        draw();
+        $('#submit').addClass('disabled');
+    });
     $('#submit').click(function() {
 
     });
 
     draw();
+
+    hookWindow = true;
+    var startTime = (new Date()).toUTCString();
 });
