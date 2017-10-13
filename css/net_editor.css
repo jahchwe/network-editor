@@ -1,0 +1,32 @@
+body { background-color: #eee; }
+
+#reset {
+  position: absolute;
+  margin-left: 135vh;  /* match network-wrapper */
+  bottom: 70px;
+}
+
+#submit {
+  position: absolute;
+  margin-left: 135vh;  /* match network-wrapper */
+  bottom: 20px;
+}
+
+#end-instr {
+  display: table;
+  margin: auto;
+  margin-top: 48vh;
+  font-size: 20pt;
+}
+
+#network-wrapper {
+  background-color: white;
+  position: absolute;
+  width: 128vh;
+  height: 96vh;
+  top: 2vh;
+  left: 2vh;
+  margin: auto;
+  border-radius: 4px;
+  border: 1px solid #cecece;
+}
