@@ -2,14 +2,14 @@ body { background-color: #eee; }
 
 #reset {
   position: absolute;
-  margin-left: 135vh;  /* match network-wrapper */
+  margin-left: 132vh;  /* match network-wrapper */
   bottom: 70px;
 }
 
 #submit {
   position: absolute;
-  margin-left: 135vh;  /* match network-wrapper */
-  bottom: 20px;
+  margin-left: 132vh;  /* match network-wrapper */
+  bottom: 2vh;
 }
 
 #end-instr {
@@ -29,4 +29,30 @@ body { background-color: #eee; }
   margin: auto;
   border-radius: 4px;
   border: 1px solid #cecece;
+}
+
+.vis-network {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/*.vis-manipulation {
+  display: block;
+  border-radius: 4px;
+}*/
+#manipulation-wrapper {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+#manipulation-wrapper button {
+  line-height: 1.2; 
 }
