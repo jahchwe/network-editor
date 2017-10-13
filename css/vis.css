@@ -515,7 +515,7 @@ div.vis-network div.vis-manipulation {
   border-radius: 4px;
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#fcfcfc',GradientType=0 ); /* IE6-9 */
 
-  padding-top:10px;
+  padding-top: 8px;
   position: absolute;
   left: 0;
   top: 0;

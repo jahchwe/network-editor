@@ -47,6 +47,29 @@ $(function(){
                     }
                     $('#submit').removeClass('disabled');
                 }
+            },
+            edges: {
+                color: {
+                    color: 'black',
+                    highlight:'grey'
+                },
+                width: 2,
+            },
+            physics: {
+                forceAtlas2Based: {
+                    gravitationalConstant: -40,
+                    centralGravity: 0.005,
+                    springLength: 200,
+                    springConstant: 0.05,
+                    avoidOverlap: 0
+                },
+                solver: 'forceAtlas2Based',
+                timestep: 0.75,
+                stabilization: {
+                    enabled: true,
+                    iterations: 1000,
+                    updateInterval: 25
+                }
             }
         }
         network = new vis.Network(container, data, options);
