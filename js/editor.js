@@ -56,7 +56,7 @@ $(function(){
     $('#reset').click(draw);
     $('#submit').click(function() {
 
-    })
+    });
 
     draw();
 });
