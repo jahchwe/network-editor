@@ -38,9 +38,9 @@ $(function() {
     var edges = null;
     var network = null;
     var data = {
-        nodes: [{id: 0, image: IMG_DIR + 'F000.png', shape: 'image'},
-                {id: 1, image: IMG_DIR + 'F001.png', shape: 'image'},
-                {id: 2, image: IMG_DIR + 'F002.png', shape: 'image'}],
+        nodes: [{id: 0, label: '0', image: IMG_DIR + 'F000.png', shape: 'image'},
+                {id: 1, label: '1', image: IMG_DIR + 'F001.png', shape: 'image'},
+                {id: 2, label: '2', image: IMG_DIR + 'F002.png', shape: 'image'}],
         edges: []
     }
 
@@ -89,11 +89,11 @@ $(function() {
                     var same_nodes = original_nodes.indexOf(data.from) != -1 &&
                                      original_nodes.indexOf(data.to) != -1;
                     var connected = network.getConnectedNodes(data.from).indexOf(data.to) != -1;
-                    if (same_nodes || !connected) {
+                    if (data.from != data.to && (same_nodes || !connected)) {
                         callback(data);  // connect
                     } else {
-                        // forbid connecting two nodes that are already connected
-                        callback(null);
+                        // forbid connecting a node to itself or connecting two nodes that are already connected
+                        callback(null);  // cancel
                         network.selectEdges([data.id]);
                         network.editEdgeMode();
                     }
@@ -114,6 +114,13 @@ $(function() {
                         values.shadowX = 0;
                         values.shadowY = 0;
                     }
+                },
+                font: {  // transparent labels
+                    color: 'rgba(255, 255, 255, 0.0)',
+                    strokeWidth: 10,
+                    strokeColor: 'rgba(0, 0, 0, 0.0)',
+                    size: 32,
+                    vadjust: -55
                 }
             },
             edges: {
@@ -157,6 +164,7 @@ $(function() {
         draw();
         $('#submit').addClass('disabled');
     });
+
     $('#submit').click(function() {
         if ($(this).hasClass('disabled')) {
             return;
@@ -167,13 +175,22 @@ $(function() {
             var firebaseUid = user.uid;
             console.log('Signed in as ' + firebaseUid);
 
+            // get network data
+            var positions = network.getPositions();
+            var nodes = Object.keys(positions).map(function (key) {
+                positions[key].id = key;
+                return positions[key];
+            });
+            nodes.forEach(function(elem, index) {
+                elem.connections = network.getConnectedNodes(index);
+            });
+
             var data = {
                 firebase_uid: firebaseUid,
                 start_time: startTime.toString(),
                 end_time: endTime.toString(),
                 duration: endTime.getTime() - startTime.getTime(),
-                data: 'Yo',  // TODO
-                image: 'Yoo'  // TODO
+                data: nodes
             };
             var userRef = firebase.database().ref(userId).push();
             userRef.set(data).then(function() {
@@ -187,6 +204,26 @@ $(function() {
                 }));
             }, function() {
                 alert('Error: cannot connect to Firebase');
+            });
+
+            // get a network image
+            network.setOptions({  // showing node IDs
+                nodes: {
+                    font: {
+                        color: 'rgba(255, 255, 255, 1.0)',
+                        strokeColor: 'rgba(0, 0, 0, 1.0)'
+                    }
+                }
+            });
+            var canvas = $('.vis-network canvas')[0];
+            canvas.toBlob(function(blob) {
+                var storageRef = firebase.storage().ref();
+                var path = userId + '/' + userId + '_' + startTime.toString() + '.png';
+                storageRef.child(path).put(blob).then(function() {
+                    console.log('success');
+                }, function() {
+                    console.log('failure');
+                });
             });
         }, function() {
             alert('Error: cannot connect to Firebase');
