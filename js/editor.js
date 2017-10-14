@@ -1,7 +1,18 @@
 var hookWindow = false;
 
-$(function(){
+$(function() {
     'use strict';
+
+    // parse id in URL
+    var userId = '';
+    var parameters = window.location.search.substring(1);
+    if (parameters.length > 0) {
+        userId = parameters.split('=')[1];
+    }
+    if (userId.length == 0 || userId.length > 8 || !userId.startsWith('ucla')) {
+        $('body').empty();
+        return;
+    }
 
     // prevent closing window
     window.onbeforeunload = function() {
@@ -9,6 +20,17 @@ $(function(){
             return 'Do you want to leave this page? Your progress will not be saved.';
         }
     }
+
+    // initialize firebase
+    var config = {
+        apiKey: "AIzaSyD1x_G62LDh16lIhg--xKt69N79TgH--l8",
+        authDomain: "network-editor.firebaseapp.com",
+        databaseURL: "https://network-editor.firebaseio.com",
+        projectId: "network-editor",
+        storageBucket: "network-editor.appspot.com",
+        messagingSenderId: "208552070855"
+    };
+    firebase.initializeApp(config);
 
     // construct network
     var IMG_DIR = 'img/'
@@ -136,12 +158,43 @@ $(function(){
         $('#submit').addClass('disabled');
     });
     $('#submit').click(function() {
+        if ($(this).hasClass('disabled')) {
+            return;
+        }
 
-        hookWindow = false;
+        var endTime = new Date();
+        firebase.auth().signInAnonymously().then(function(user) {
+            var firebaseUid = user.uid;
+            console.log('Signed in as ' + firebaseUid);
+
+            var data = {
+                firebase_uid: firebaseUid,
+                start_time: startTime.toString(),
+                end_time: endTime.toString(),
+                duration: endTime.getTime() - startTime.getTime(),
+                data: 'Yo',  // TODO
+                image: 'Yoo'  // TODO
+            };
+            var userRef = firebase.database().ref(userId).push();
+            userRef.set(data).then(function() {
+                // success
+                hookWindow = false;
+                firebase.auth().currentUser.delete();
+                $('body').empty();
+                $('body').append($('<p>', {
+                    text: 'Your response has been recorded. Thank you!',
+                    id: 'end-instr'
+                }));
+            }, function() {
+                alert('Error: cannot connect to Firebase');
+            });
+        }, function() {
+            alert('Error: cannot connect to Firebase');
+        });
     });
 
     draw();
 
     hookWindow = true;
-    var startTime = (new Date()).toUTCString();
+    var startTime = new Date();
 });

@@ -21,9 +21,6 @@
             display: table;
             margin: auto;
         }
-        #gender-group .radio {
-            left: 20%;
-        }
         #instr {
             margin: auto;
             width: 270px;
@@ -37,7 +34,7 @@
             <div id="info-form" class="survey" data-toggle="validator" role="form">
                 <form action="javascript:signin();" class="form-horizontal">
                     <div id="user-id-group" class="form-group">
-                        <span id="user-id-text" class=" control-label" for="textinput">ID</span>
+                        <label id="user-id-text" class="control-label" for="user-id">ID</label>
                         <input id="user-id" type="text" class="form-control input-md" required>
                     </div>
                     <button id="submit" type="submit" class="btn btn-primary submit-btn">Submit</button>
@@ -56,10 +53,10 @@
             var userId;
             $('#instr').hide();
             function signin() {
-                $('#user-id-group').removeClass('bold has-error has-danger');
+                $('#user-id').removeClass('is-invalid');
                 userId = $('#user-id').val();
-                if (userId.length == 0) {  // error checking
-                    $('#user-id-group').addClass('bold has-error has-danger');
+                if (!userId.startsWith('ucla')) {  // error checking
+                    $('#user-id').addClass('is-invalid');
                     return;
                 }
                 $('#info').hide();
