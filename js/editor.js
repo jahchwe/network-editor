@@ -169,8 +169,19 @@ $(function() {
         if ($(this).hasClass('disabled')) {
             return;
         }
-
         var endTime = new Date();
+
+        // showing node IDs
+        network.setOptions({
+            nodes: {
+                font: {
+                    color: 'rgba(255, 255, 255, 1.0)',
+                    strokeColor: 'rgba(0, 0, 0, 1.0)'
+                }
+            }
+        });
+
+        // send data
         firebase.auth().signInAnonymously().then(function(user) {
             var firebaseUid = user.uid;
             console.log('Signed in as ' + firebaseUid);
@@ -207,23 +218,11 @@ $(function() {
             });
 
             // get a network image
-            network.setOptions({  // showing node IDs
-                nodes: {
-                    font: {
-                        color: 'rgba(255, 255, 255, 1.0)',
-                        strokeColor: 'rgba(0, 0, 0, 1.0)'
-                    }
-                }
-            });
             var canvas = $('.vis-network canvas')[0];
             canvas.toBlob(function(blob) {
                 var storageRef = firebase.storage().ref();
                 var path = userId + '/' + userId + '_' + startTime.toString() + '.png';
-                storageRef.child(path).put(blob).then(function() {
-                    console.log('success');
-                }, function() {
-                    console.log('failure');
-                });
+                storageRef.child(path).put(blob);
             });
         }, function() {
             alert('Error: cannot connect to Firebase');
