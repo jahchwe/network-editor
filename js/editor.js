@@ -42,20 +42,73 @@ $(function(){
                 initiallyActive: true,
                 addNode: false,
                 deleteNode: false,
-                addEdge: function (data, callback) {
-                    if (data.from != data.to  && network.getConnectedNodes(data.from).indexOf(data.to) == -1) {
+                controlNodeStyle: {
+                    size: 7,
+                    color: {
+                        background: '#ffc107',
+                        border: '#007bff',
+                        highlight: {
+                            background: '#007bff',
+                            border: '#ffc107'
+                        },
+                    },
+                    borderWidth: 3,
+                },
+                addEdge: function(data, callback) {
+                    if (data.from != data.to  && 
+                        network.getConnectedNodes(data.from).indexOf(data.to) == -1) {
                         // not the same node and the two nodes are not connected
                         callback(data);
                         $('#submit').removeClass('disabled');
+                    }
+                },
+                editEdge: function(data, callback) {
+                    var original_nodes = network.getConnectedNodes(data.id);
+                    var same_nodes = original_nodes.indexOf(data.from) != -1 &&
+                                     original_nodes.indexOf(data.to) != -1;
+                    var connected = network.getConnectedNodes(data.from).indexOf(data.to) != -1;
+                    if (same_nodes || !connected) {
+                        callback(data);  // connect
+                    } else {
+                        // forbid connecting two nodes that are already connected
+                        callback(null);
+                        network.selectEdges([data.id]);
+                        network.editEdgeMode();
+                    }
+                }
+            },
+            nodes: {
+                shadow: {
+                    enabled: true,
+                    size: 5,
+                    x: 0,
+                    y: 0
+                },
+                chosen: {
+                    node: function(values, id, selected, hovering) {
+                        values.shadow = true;
+                        values.shadowColor = "rgba(0, 0, 0, 0.8)";
+                        values.shadowSize = 15;
+                        values.shadowX = 0;
+                        values.shadowY = 0;
                     }
                 }
             },
             edges: {
                 color: {
-                    color: 'black',
-                    highlight:'#f0ad4e'
+                    color: '#007bff'
                 },
                 width: 2,
+                chosen: {
+                    edge: function(values, id, selected, hovering) {
+                        values.color = '#46b8da';
+                        values.width = 2.5;
+                        values.shadow = true;
+                        values.shadowColor = '#007bff';
+                        values.shadowX = 0;
+                        values.shadowY = 0;
+                    }
+                }
             },
             physics: {
                 forceAtlas2Based: {
@@ -84,6 +137,7 @@ $(function(){
     });
     $('#submit').click(function() {
 
+        hookWindow = false;
     });
 
     draw();
