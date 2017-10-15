@@ -5,14 +5,17 @@ $(function() {
 
     // parse id in URL
     var userId = '';
+    var sid = null;
     var parameters = window.location.search.substring(1);
     if (parameters.length > 0) {
         userId = parameters.split('=')[1];
+        sid = userId.substring(4);
     }
-    if (userId.length == 0 || userId.length > 8 || !userId.startsWith('ucla')) {
+    if (userId.length < 5 || userId.length > 8 || !userId.startsWith('ucla') || isNaN(sid)) {
         $('body').empty();
         return;
     }
+    sid = parseInt(sid);
 
     // prevent closing window
     window.onbeforeunload = function() {
@@ -37,11 +40,15 @@ $(function() {
     var nodes = null;
     var edges = null;
     var network = null;
-    var data = {
-        nodes: [{id: 0, label: '0', image: IMG_DIR + 'F000.png', shape: 'image'},
-                {id: 1, label: '1', image: IMG_DIR + 'F001.png', shape: 'image'},
-                {id: 2, label: '2', image: IMG_DIR + 'F002.png', shape: 'image'}],
-        edges: []
+
+    var data = {nodes: [], edges: []}
+    for (var i = 0; i < subject_imgs[sid].length; ++i) {
+        data.nodes.push({
+            id: i,
+            label: i.toString(),
+            image: IMG_DIR + subject_imgs[sid][i],
+            shape: 'image'
+        });
     }
 
     function destroy() {
