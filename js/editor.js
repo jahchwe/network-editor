@@ -216,24 +216,29 @@ $(function() {
             var userRef = firebase.database().ref(userId).push();
             userRef.set(data).then(function() {
                 // success
-                hookWindow = false;
-                firebase.auth().currentUser.delete();
-                $('body').empty();
-                $('body').append($('<p>', {
-                    text: 'Your response has been recorded. Thank you!',
-                    id: 'end-instr'
-                }));
+                // save a network image
+                var canvas = $('.vis-network canvas')[0];
+                canvas.toBlob(function(blob) {
+                    var storageRef = firebase.storage().ref();
+                    var path = userId + '/' + userId + '_' + startTime.toString() + '.png';
+                    storageRef.child(path).put(blob).then(function() {
+                        hookWindow = false;
+                        firebase.auth().currentUser.delete();
+                        $('body').empty();
+                        $('body').append($('<p>', {
+                            text: 'Your response has been recorded. Thank you!',
+                            id: 'end-instr'
+                        }));
+                    }, function() {
+                        hookWindow = false;
+                        firebase.auth().currentUser.delete();
+                        alert('The response has been recorded, but the image failed to save. Please right click on the image to save it, or find the experimenter. Thank you!');
+                    });
+                });
             }, function() {
                 alert('Error: cannot connect to Firebase');
             });
 
-            // get a network image
-            var canvas = $('.vis-network canvas')[0];
-            canvas.toBlob(function(blob) {
-                var storageRef = firebase.storage().ref();
-                var path = userId + '/' + userId + '_' + startTime.toString() + '.png';
-                storageRef.child(path).put(blob);
-            });
         }, function() {
             alert('Error: cannot connect to Firebase');
         });
