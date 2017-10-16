@@ -520,7 +520,7 @@ div.vis-network div.vis-manipulation {
   left: 0;
   top: 0;
   width: 100%;
-  height: 28px;
+  height: 0;
 }
 
 div.vis-network div.vis-edit-mode {
