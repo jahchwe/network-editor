@@ -164,6 +164,9 @@ $(function() {
             }
         }
         network = new vis.Network(container, data, options);
+        network.on('stabilized', function(params) {
+            network.fit({ animation: {duration: 500} });
+        });
     }
 
     // set up buttons
