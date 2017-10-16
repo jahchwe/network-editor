@@ -152,7 +152,7 @@ $(function() {
                     centralGravity: 0.005,
                     springLength: 200,
                     springConstant: 0.05,
-                    avoidOverlap: 0
+                    avoidOverlap: 1
                 },
                 solver: 'forceAtlas2Based',
                 timestep: 0.75,
