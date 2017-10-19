@@ -5,13 +5,15 @@ $(function() {
 
     // parse id in URL
     var userId = '';
-    var sid = null;
+    var sid = null, sectionId = null;
     var parameters = window.location.search.substring(1);
-    if (parameters.length > 0) {
-        userId = parameters.split('=')[1];
+    if (parameters.length > 17 && parameters.length < 21) {
+        userId = parameters.split(/[&=]/)[1];
         sid = userId.substring(4);
+        sectionId = parameters[parameters.length - 1];
     }
-    if (userId.length < 5 || userId.length > 8 || !userId.startsWith('ucla') || isNaN(sid)) {
+    if (userId.length < 5 || userId.length > 8 || !userId.startsWith('ucla') ||
+        isNaN(sid) || isNaN(sectionId)) {
         $('body').empty();
         return;
     }
@@ -42,12 +44,12 @@ $(function() {
     var network = null;
 
     var data = {nodes: [], edges: []}
-    for (var i = 0; i < subject_imgs[sid].length; ++i) {
+    for (var i = 0; i < subject_imgs[sid][sectionId].length; ++i) {
         data.nodes.push({
             id: i,
             label: i.toString(),
-            image: IMG_DIR + subject_imgs[sid][i],
-            shape: 'image'
+            image: IMG_DIR + subject_imgs[sid][sectionId][i],
+            shape: 'circularImage'
         });
     }
 
@@ -127,8 +129,10 @@ $(function() {
                     strokeWidth: 10,
                     strokeColor: 'rgba(0, 0, 0, 0.0)',
                     size: 32,
-                    vadjust: -55
-                }
+                    vadjust: -70
+                },
+                borderWidth: 0,
+                size: 40
             },
             edges: {
                 color: {

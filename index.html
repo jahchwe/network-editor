@@ -14,12 +14,15 @@
         #info-form {
             position: absolute;
             width: 20%;
-            top: 40%;
+            top: 35%;
             left: 40%;
         }
         .submit-btn {
             display: table;
             margin: auto;
+        }
+        #section-group .radio {
+            margin-left: 5px;
         }
         #instr {
             margin: auto;
@@ -37,6 +40,17 @@
                         <label id="user-id-text" class="control-label" for="user-id">ID</label>
                         <input id="user-id" type="text" class="form-control input-md" required>
                     </div>
+                    <div id="section-group" class="form-group">
+                        <label id="user-id-text" class="control-label">Section</label>
+                        <div class="row">
+                            <div class="radio col-auto">
+                                <input name="section" type="radio" value="1" required> 1
+                            </div>
+                            <div class="radio col">
+                                <input name="section" type="radio" value="2"> 2
+                            </div>
+                        </div>
+                    </div>
                     <button id="submit" type="submit" class="btn btn-primary submit-btn">Submit</button>
                 </form>
             </div>
@@ -50,11 +64,12 @@
 
         <!-- JavaScript -->
         <script>
-            var userId;
+            var userId, sectionId;
             $('#instr').hide();
             function signin() {
                 $('#user-id').removeClass('is-invalid');
                 userId = $('#user-id').val();
+                sectionId = $("input[name='section']:checked").val();
                 if (!userId.startsWith('ucla')) {  // error checking
                     $('#user-id').addClass('is-invalid');
                     return;
@@ -63,7 +78,7 @@
                 $('#instr').show();
             }
             $('#start').click(function() {
-                window.location.href = 'editor.html?id=' + userId;
+                window.location.href = 'editor.html?id=' + userId + '&section=' + sectionId;
             });
         </script>
     </body>
