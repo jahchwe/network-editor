@@ -226,8 +226,7 @@ $(function() {
 
                 canvas.toBlob(function(blob) {
                     var storageRef = firebase.storage().ref();
-                    var path = userId + '/' + sectionId + '/' + 
-                               userId + '_' + sectionId + '_' + startTime.toString() + '.png';
+                    var path = userId + '_' + sectionId + '_' + startTime.toString() + '.png';
                     storageRef.child(path).put(blob).then(function() {
                         hookWindow = false;
                         firebase.auth().currentUser.delete();
