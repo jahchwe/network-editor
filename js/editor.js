@@ -217,14 +217,15 @@ $(function() {
                 duration: endTime.getTime() - startTime.getTime(),
                 data: nodes
             };
-            var userRef = firebase.database().ref(userId).push();
+            var userRef = firebase.database().ref(userId + '/' + sectionId).push();
             userRef.set(data).then(function() {
                 // success
                 // save a network image
                 var canvas = $('.vis-network canvas')[0];
                 canvas.toBlob(function(blob) {
                     var storageRef = firebase.storage().ref();
-                    var path = userId + '/' + userId + '_' + startTime.toString() + '.png';
+                    var path = userId + '/' + sectionId + '/' + 
+                               userId + '_' + sectionId + '_' + startTime.toString() + '.png';
                     storageRef.child(path).put(blob).then(function() {
                         hookWindow = false;
                         firebase.auth().currentUser.delete();
@@ -236,7 +237,7 @@ $(function() {
                     }, function() {
                         hookWindow = false;
                         firebase.auth().currentUser.delete();
-                        alert('The response has been recorded, but the image failed to save. Please right click on the image to save it, or find the experimenter. Thank you!');
+                        alert('The response has been recorded, but the image failed to save. Please right click on the image and save it, or find the experimenter. Thank you!');
                     });
                 });
             }, function() {
