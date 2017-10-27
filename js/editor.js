@@ -92,6 +92,7 @@ $(function() {
                         callback(data);
                         $('#submit').removeClass('disabled');
                     }
+                    network.addEdgeMode();
                 },
                 editEdge: function(data, callback) {
                     var original_nodes = network.getConnectedNodes(data.id);
