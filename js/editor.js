@@ -172,6 +172,9 @@ $(function() {
         network.on('stabilized', function(params) {
             network.fit({ animation: {duration: 500} });
         });
+        network.on('selectEdge', function(obj) {
+            network.enableEditMode();  // quit addEdgeMode
+        });
     }
 
     // set up buttons
