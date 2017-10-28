@@ -57,23 +57,27 @@
         </div>
 
         <div id="instr">
-            <p>On the next page, you will see the 9 faces from the organization you've learned about.</p>
-
+            <p id="instr-text"></p>
             <button id="start" class="btn btn-primary submit-btn">Start</button>
         </div>
 
         <!-- JavaScript -->
         <script>
+            var instrText = [
+                'On the next page, you will see the images of people again. Your job is to reconstruct the social network you\'ve learned about -- just draw an edge between any two people who are friends.',
+                'On the next page, you will see the images of airports again. Your job is to reconstruct the flight network you\'ve learned about -- just draw an edge between any two airports that are connected by a direct flight.'
+            ];
             var userId, sectionId;
             $('#instr').hide();
             function signin() {
                 $('#user-id').removeClass('is-invalid');
                 userId = $('#user-id').val();
                 sectionId = $("input[name='section']:checked").val();
-                if (!userId.startsWith('ucla')) {  // error checking
+                if (!userId.startsWith('ucla') || isNaN(userId.substring(4))) {  // error checking
                     $('#user-id').addClass('is-invalid');
                     return;
                 }
+                $('#instr-text').text(instrText[parseInt(userId.substring(4)) % 2]);
                 $('#info').hide();
                 $('#instr').show();
             }
