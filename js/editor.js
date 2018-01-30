@@ -83,7 +83,7 @@ $(function() {
                     editEdge: 'Edit Connection',
                     addDescription: 'Click in an empty space to place a new ' + nodeName + '.',
                     edgeDescription: 'Click on a ' + nodeName + ' and drag the connection to another ' + nodeName + ' to connect them.',
-                    editEdgeDescription: 'Click on the control points and drag them to a ' + nodeName + ' to connect to it.',
+                    editEdgeDescription: 'Click on the control point and drag it to another ' + nodeName + ' to connect to it.',
                     createEdgeError: 'Cannot link connections to a cluster.',
                     deleteClusterError: 'Clusters cannot be deleted.',
                     editClusterError: 'Clusters cannot be edited.'
