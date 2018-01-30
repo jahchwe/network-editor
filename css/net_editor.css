@@ -12,6 +12,13 @@ body { background-color: #eee; }
   bottom: 2vh;
 }
 
+#instr {
+  margin-left: 132vh;
+  margin-right: 2vh;
+  margin-top: 4vh;
+  color: #555;
+}
+
 #end-instr {
   display: table;
   margin: auto;

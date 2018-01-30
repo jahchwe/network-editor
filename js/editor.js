@@ -18,6 +18,9 @@ $(function() {
         return;
     }
     sid = parseInt(sid);
+    var nodeName = sid % 2 === 0 ? 'person' : 'airport';
+    $('#instr').html('Click "Add Connection" to add connections between ' + (sid % 2 === 0 ? 'people' : 'airports') +
+    '.<br/><br/>Click on a connection to edit or remove it.');
 
     // prevent closing window
     window.onbeforeunload = function() {
@@ -68,6 +71,24 @@ $(function() {
         // create a network
         var container = document.getElementById('network-wrapper');
         var options = {
+            locale: 'custom',
+            locales: {
+                'custom': {
+                    edit: 'Edit',
+                    del: 'Delete selected',
+                    back: 'Back',
+                    addNode: 'Add ' + nodeName,
+                    addEdge: 'Add Connection',
+                    editNode: 'Edit ' + nodeName,
+                    editEdge: 'Edit Connection',
+                    addDescription: 'Click in an empty space to place a new ' + nodeName + '.',
+                    edgeDescription: 'Click on a ' + nodeName + ' and drag the connection to another ' + nodeName + ' to connect them.',
+                    editEdgeDescription: 'Click on the control points and drag them to a ' + nodeName + ' to connect to it.',
+                    createEdgeError: 'Cannot link connections to a cluster.',
+                    deleteClusterError: 'Clusters cannot be deleted.',
+                    editClusterError: 'Clusters cannot be edited.'
+                }
+            },
             manipulation: {
                 enabled: true,
                 initiallyActive: true,
