@@ -50,8 +50,8 @@ $(function() {
     for (var i = 0; i < subject_imgs[sid][sectionId].length; ++i) {
         data.nodes.push({
             id: i,
-            label: i.toString(),
-            image: IMG_DIR + subject_imgs[sid][sectionId][i],
+            label: subject_imgs[sid][sectionId][i][1],
+            image: IMG_DIR + subject_imgs[sid][sectionId][i][0],
             shape: 'circularImage'
         });
     }
@@ -78,9 +78,9 @@ $(function() {
                     del: 'Delete selected',
                     back: 'Back',
                     addNode: 'Add ' + nodeName,
-                    addEdge: 'Add Connection',
+                    addEdge: 'Add connection',
                     editNode: 'Edit ' + nodeName,
-                    editEdge: 'Edit Connection',
+                    editEdge: 'Edit connection',
                     addDescription: 'Click in an empty space to place a new ' + nodeName + '.',
                     edgeDescription: 'Click on a ' + nodeName + ' and drag the connection to another ' + nodeName + ' to connect them.',
                     editEdgeDescription: 'Click on the control point and drag it to another ' + nodeName + ' to connect to it.',
@@ -147,14 +147,15 @@ $(function() {
                     }
                 },
                 font: {  // transparent labels
-                    color: 'rgba(255, 255, 255, 0.0)',
-                    strokeWidth: 10,
-                    strokeColor: 'rgba(0, 0, 0, 0.0)',
-                    size: 32,
-                    vadjust: -70
+                    color: '#eeeeee',
+                    strokeWidth: 5,
+                    strokeColor: 'rgba(0, 0, 0, 0.8)',
+                    size: 20,
+                    vadjust: -8
                 },
                 borderWidth: 0,
-                size: 40
+                size: 60,
+                color: '#fff'
             },
             edges: {
                 color: {
@@ -210,16 +211,6 @@ $(function() {
         }
         var endTime = new Date();
         $('#process-modal').modal('show');
-
-        // showing node IDs
-        network.setOptions({
-            nodes: {
-                font: {
-                    color: 'rgba(255, 255, 255, 1.0)',
-                    strokeColor: 'rgba(0, 0, 0, 1.0)'
-                }
-            }
-        });
 
         // send data
         firebase.auth().signInAnonymously().then(function(user) {
