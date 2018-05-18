@@ -42,19 +42,18 @@ $(function() {
 
     // construct network
     var IMG_DIR = 'img/'
-    var nodes = null;
-    var edges = null;
+    var initial_nodes = [];
     var network = null;
 
-    var data = {nodes: [], edges: []}
     for (var i = 0; i < subject_imgs[sid][sectionId].length; ++i) {
-        data.nodes.push({
+        initial_nodes.push({
             id: i,
             label: subject_imgs[sid][sectionId][i][1],
             image: IMG_DIR + subject_imgs[sid][sectionId][i][0],
             shape: 'circularImage'
         });
     }
+    var data = {nodes: new vis.DataSet(initial_nodes), edges: []};
 
     function destroy() {
         if (network !== null) {
@@ -65,8 +64,6 @@ $(function() {
 
     function draw() {
         destroy();
-        nodes = [];
-        edges = [];
 
         // create a network
         var container = document.getElementById('network-wrapper');
@@ -190,6 +187,7 @@ $(function() {
                 }
             }
         }
+        data = {nodes: new vis.DataSet(initial_nodes), edges: []};
         network = new vis.Network(container, data, options);
         network.on('stabilized', function(params) {
             network.fit({ animation: {duration: 500} });
@@ -212,20 +210,28 @@ $(function() {
         var endTime = new Date();
         $('#process-modal').modal('show');
 
+        // get network data
+        var positions = network.getPositions();
+        var nodes = Object.keys(positions).map(function (key) {
+            positions[key].id = key;
+            return positions[key];
+        });
+        nodes.forEach(function(elem, index) {
+            elem.connections = network.getConnectedNodes(index);
+        });
+
+        // showing node IDs
+        var labeled_nodes = Object.assign([], initial_nodes);  // make copy
+        for (var i = 0; i < initial_nodes.length; ++i) {
+            labeled_nodes[i].label = labeled_nodes[i].id + '\n\n\n\n' + labeled_nodes[i].label;
+        }
+        data.nodes.update(labeled_nodes);
+        network.setOptions({ nodes: { font: { vadjust: -80 } } });
+
         // send data
         firebase.auth().signInAnonymously().then(function(user) {
             var firebaseUid = user.uid;
             console.log('Signed in as ' + firebaseUid);
-
-            // get network data
-            var positions = network.getPositions();
-            var nodes = Object.keys(positions).map(function (key) {
-                positions[key].id = key;
-                return positions[key];
-            });
-            nodes.forEach(function(elem, index) {
-                elem.connections = network.getConnectedNodes(index);
-            });
 
             var data = {
                 firebase_uid: firebaseUid,
@@ -234,7 +240,7 @@ $(function() {
                 duration: endTime.getTime() - startTime.getTime(),
                 data: nodes
             };
-            var userRef = firebase.database().ref(userId + '/' + sectionId).push();
+            var userRef = firebase.database().ref(userId + '/' + sectionId + '/' + data.start_time);
             userRef.set(data).then(function() {
                 // success
                 // save a network image
