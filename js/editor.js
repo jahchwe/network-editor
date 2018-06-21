@@ -261,6 +261,7 @@ $(function() {
             userRef.set(data).then(function() {
                 // success
                 // save a network image
+                /*
                 var canvas = $('.vis-network canvas')[0];
 
                 canvas.toBlob(function(blob) {
@@ -282,6 +283,7 @@ $(function() {
                         alert('The response has been recorded, but the image failed to save. Please right click on the image and save it, or find the experimenter. Thank you!');
                     });
                 });
+                */
             }, function() {
                 $('#process-modal').modal('hide');
                 alert('Error: cannot connect to Firebase');
