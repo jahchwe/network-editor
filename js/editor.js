@@ -3,7 +3,20 @@ var hookWindow = false;
 $(function() {
     'use strict';
 
+
+    var userId = sessionStorage.getItem('userId');
+    var sid = userId.substring(4);
+    var sectionId = sessionStorage.getItem('sectionId')
+    var friends_unsplit = sessionStorage.getItem('friends')
+
+    console.log(friends)
+    console.log(userId)
+    console.log(sid)
+    console.log(sectionId)
+
+    var friends = friends_unsplit.split(",")
     // parse id in URL
+    /*
     var userId = '';
     var sid = null, sectionId = null;
     var parameters = window.location.search.substring(1);
@@ -12,6 +25,10 @@ $(function() {
         sid = userId.substring(4);
         sectionId = parameters[parameters.length - 1];
     }
+    */
+
+
+
     if (userId.length < 5 || userId.length > 8 || !userId.startsWith('ucla') ||
         isNaN(sid) || isNaN(sectionId)) {
         $('body').empty();
@@ -29,14 +46,14 @@ $(function() {
         }
     }
 
-    // initialize firebase
+    // Initialize Firebase
     var config = {
-        apiKey: "AIzaSyD1x_G62LDh16lIhg--xKt69N79TgH--l8",
-        authDomain: "network-editor.firebaseapp.com",
-        databaseURL: "https://network-editor.firebaseio.com",
-        projectId: "network-editor",
-        storageBucket: "network-editor.appspot.com",
-        messagingSenderId: "208552070855"
+      apiKey: "AIzaSyAd8PYP5oRCJ_jcohHso0i-3BAlbxETwIo",
+      authDomain: "network-editor-columbia.firebaseapp.com",
+      databaseURL: "https://network-editor-columbia.firebaseio.com",
+      projectId: "network-editor-columbia",
+      storageBucket: "",
+      messagingSenderId: "17102557397"
     };
     firebase.initializeApp(config);
 
@@ -45,12 +62,12 @@ $(function() {
     var initial_nodes = [];
     var network = null;
 
-    for (var i = 0; i < subject_imgs[sid][sectionId].length; ++i) {
+    for (var i = 0; i < friends.length; ++i) {
         initial_nodes.push({
             id: i,
-            label: subject_imgs[sid][sectionId][i][1],
-            image: IMG_DIR + subject_imgs[sid][sectionId][i][0],
-            shape: 'circularImage'
+            label: friends[i],
+            //image: IMG_DIR + subject_imgs[sid][sectionId][i][0],
+            shape: 'circle'
         });
     }
     var data = {nodes: new vis.DataSet(initial_nodes), edges: []};
@@ -104,7 +121,7 @@ $(function() {
                     borderWidth: 3,
                 },
                 addEdge: function(data, callback) {
-                    if (data.from != data.to  && 
+                    if (data.from != data.to  &&
                         network.getConnectedNodes(data.from).indexOf(data.to) == -1) {
                         // not the same node and the two nodes are not connected
                         callback(data);
