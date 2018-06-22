@@ -50,7 +50,7 @@
         <!-- page 1 scripts -->
 
         var instrText = [
-            'On the next page, you will see the images of people again. Your job is to reconstruct the social network you\'ve learned about -- just draw a connection between any two people who are friends.',
+            'Please enter the names of your closest friends. You can add as many friends as you like. On the next page, you will be asked to draw the connections between your friends. That is, you will use connections to show who is friends with who.',
             'On the next page, you will see the images of airports again. Your job is to reconstruct the flight network you\'ve learned about -- just draw a connection between any two airports that are connected by a direct flight.'
         ];
         var userId = null, sectionId = null;
@@ -79,7 +79,7 @@
               $('#friends_list').append("<div id='user-id-group' class='form-group'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + "</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' required> </div>");
               friend_count+=1;
               console.log(friend_count);
-              
+
           });
         });
 
