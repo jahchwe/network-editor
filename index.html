@@ -76,11 +76,10 @@
         $(function() {
           $('#add_friends').click(function() {
               console.log("add")
-              if (friend_count < 5) {
-                  $('#friends_list').append("<div id='user-id-group' class='form-group'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + "</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' required> </div>");
-                  friend_count+=1;
-                  console.log(friend_count);
-              }
+              $('#friends_list').append("<div id='user-id-group' class='form-group'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + "</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' required> </div>");
+              friend_count+=1;
+              console.log(friend_count);
+              
           });
         });
 
