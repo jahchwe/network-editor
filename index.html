@@ -39,13 +39,17 @@
         }
 
         #add_friends {
-            margin-top: 20px;
-            margin-bottom: 20px;
             margin-right: 20px;
         }
 
         #friends_list {
             margin-top: 40px;
+        }
+
+        #remove_friend {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            margin-right: 20px;
         }
 
 
@@ -78,7 +82,7 @@
         $(function() {
           $('#add_friends').click(function() {
               console.log("add")
-              $('#friends_list').append("<div id='user-id-group' class='form-group'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + " (first name, last initial)</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' required> </div>");
+              $('#friends_list').append("<div id='user-id-group" + friend_count + "' class='form-group'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + " (first name, last initial)</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' required> </div>");
               friend_count+=1;
               console.log(friend_count);
 
@@ -90,7 +94,7 @@
             console.log("eval called")
             for (var q = 0; q < friend_count; q++) {
                 var friend_input = $('#user-id-input' + q).val();
-                console.log(friend_input);
+                console.log("added: " + friend_input);
 
                 if (/[^a-zA-Z ]/.test(friend_input)) {
                     console.log("bad input")
@@ -128,8 +132,18 @@
             $("#back").click(function(){
                 $("#page3").hide();
                 $("#page2").show();
-            })
-        })
+            });
+        });
+
+        $(function(){
+            $("#remove_friend").click(function() {
+                if (friend_count>1) {
+                    $('#user-id-group' + (friend_count -1) ).remove();
+                    friend_count = friend_count - 1;
+                    console.log("remove: " + friend_count)
+                }
+            });
+        });
 
     </script>
 
@@ -176,13 +190,14 @@
                     <form action = "javascript:eval_input()" class="form-horizontal">
                         <div id="friends_input">
                             <div id="friends_list">
-                                <div id="user-id-group" class="form-group">
+                                <div id="user-id-group0" class="form-group">
                                     <label id="user-id-text" class="control-label" for="user-id">Friend 1 (first name, last initial)</label>
                                     <input id="user-id-input0" type="text" class="form-control input-md" required>
                                 </div>
                             </div>
                         </div>
                         <button id="add_friends" type="button" class="btn btn-success add-btn">Add friend</button>
+                        <button id="remove_friend" type="button" class="btn btn-danger"> Remove friend </button>
                         <button id="submit-page2" type="submit" class="btn btn-primary submit_page2">Submit</button>
                     </form>
                 </div>
