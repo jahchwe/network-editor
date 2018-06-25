@@ -33,7 +33,8 @@
         }
         .instr {
             margin: auto;
-            width: 400px;
+            margin-bottom: 20px;
+            width: 600px;
             margin-top: 10vh;
         }
 
@@ -43,31 +44,32 @@
             margin-right: 20px;
         }
 
+        #friends_list {
+            margin-top: 40px;
+        }
+
+
     </style>
 
     <script type="text/javascript">
 
-        <!-- page 1 scripts -->
+        //<!-- page 1 scripts -->
 
-        var instrText = [
-            'Please enter the names of your closest friends. You can add as many friends as you like. On the next page, you will be asked to draw the connections between your friends. That is, you will use connections to show who is friends with who.',
-            'On the next page, you will see the images of airports again. Your job is to reconstruct the flight network you\'ve learned about -- just draw a connection between any two airports that are connected by a direct flight.'
-        ];
         var userId = null, sectionId = null;
         function signin() {
             $('#user-id').removeClass('is-invalid');
             userId = $('#user-id').val();
             sectionId = $("input[name='section']:checked").val();
-            if (!userId.startsWith('ucla') || isNaN(userId.substring(4))) {  // error checking
+            if (!userId.startsWith('subj') || isNaN(userId.substring(4))) {  // error checking
                 $('#user-id').addClass('is-invalid');
                 return;
             }
-            $('#instr-text').text(instrText[parseInt(userId.substring(4)) % 2]);
+            //$('#instr-text').text(instrText[parseInt(userId.substring(4)) % 2]);
             $('#page1').hide();
             $('#page2').show();
         }
 
-        <!-- page2 scripts -->
+        //<!-- page2 scripts -->
 
         friends = []
 
@@ -76,7 +78,7 @@
         $(function() {
           $('#add_friends').click(function() {
               console.log("add")
-              $('#friends_list').append("<div id='user-id-group' class='form-group'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + "</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' required> </div>");
+              $('#friends_list').append("<div id='user-id-group' class='form-group'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + " (first name, last initial)</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' required> </div>");
               friend_count+=1;
               console.log(friend_count);
 
@@ -89,24 +91,40 @@
                 var friend_input = $('#user-id-input' + q).val();
                 console.log(friend_input)
 
-                if (/[^a-zA-Z]/.test(friend_input)) {
+                if (/[^a-zA-Z ]/.test(friend_input)) {
                     console.log("bad input")
                     $('#user-id-input' + q).addClass('is-invalid');
-                    break;
+                    return;
                 }
 
                 friends.push(friend_input);
             }
 
-            console.log(friends)
-            console.log(userId)
-            console.log(sectionId)
+            console.log(friends);
+            console.log(userId);
+            console.log(sectionId);
 
-            sessionStorage.setItem('friends', friends)
-            sessionStorage.setItem('userId', userId)
-            sessionStorage.setItem('sectionId', sectionId)
-            window.location.href = 'editor.html';
+            sessionStorage.clear();
+            sessionStorage.setItem('friends', friends);
+            sessionStorage.setItem('userId', userId);
+            sessionStorage.setItem('sectionId', sectionId);
+
+            $("#page2").hide();
+            $("#page3").show();
         }
+
+        $(function(){
+            $("#submit-page3").click(function() {
+                window.location.href = 'editor.html';
+            });
+        });
+
+        $(function() {
+            $("#back").click(function(){
+                $("#page3").hide();
+                $("#page2").show();
+            })
+        })
 
     </script>
 
@@ -121,7 +139,9 @@
                             <input id="user-id" type="text" class="form-control input-md" required>
                         </div>
                         <div id="section-group" class="form-group">
+                            <!--
                             <label id="user-id-text" class="control-label">Section</label>
+
                             <div class="row">
                                 <div class="radio col-auto">
                                     <input name="section" type="radio" value="1" required> 1
@@ -130,6 +150,7 @@
                                     <input name="section" type="radio" value="2"> 2
                                 </div>
                             </div>
+                            --->
                         </div>
                         <button id="submit-page1" type="submit" class="btn btn-primary submit_page1">Submit</button>
                     </form>
@@ -139,7 +160,10 @@
 
         <div id="page2">
             <div id="instr1" class = "instr">
-                <p id="instr-text"> Please enter the initials of up to 15 of your closest friends. Please make sure that every set of initials is unique. Please note that their names will be completely anonymized and will not be stored. Please only enter letters. </p>
+                <p id="instr-text"> Consider all the people with whom you like to spend your free time. <b> Since you arrived at Columbia, who are the people whom you have been with most often for informal social activities, such as going out to lunch, dinner, drinks, exercising or studying together, hanging out in each other’s rooms and/or homes, and so on? </b> </p>
+                <p id="instr-text"> Once you’ve entered a name, click the green <b>‘Add friend’ </b> button to enter another. There is no limit to the number of people you can name, so please list all the people with whom you socialize regularly. Order does not matter. </p>
+                <p id="instr-text"> Once you’re finished adding names, click the blue <b> ‘Submit’ </b> button. </p>
+
             </div>
 
             <div id="info2">
@@ -148,7 +172,7 @@
                         <div id="friends_input">
                             <div id="friends_list">
                                 <div id="user-id-group" class="form-group">
-                                    <label id="user-id-text" class="control-label" for="user-id">Friend 1</label>
+                                    <label id="user-id-text" class="control-label" for="user-id">Friend 1 (first name, last initial)</label>
                                     <input id="user-id-input0" type="text" class="form-control input-md" required>
                                 </div>
                             </div>
@@ -160,17 +184,28 @@
             </div>
         </div>
 
-        <div id="instr2" class="instr">
-            <p id="instr-text"></p>
-            <button id="start" class="btn btn-primary submit-btn">Start</button>
+        <div id="page3">
+            <div id="instr2" class="instr">
+                <p id="instr-text"> Thank you! On the next page, you will be asked to draw the connections between the friends you named. That is, you will use connections to show who is friends with whom (i.e., who regularly socializes with whom). </p>
+                <p id="instr-text"> Press start whenever you are ready for the next task. </p>
+                <p id="instr-text"> If you wish to add more friends, press <b>"Back"</b> at this time. </p>
+
+                <button id="submit-page3" type="submit" class = "btn btn-primary submit_page3"> Start </button>
+                <button id="back" type="submit" class = "btn btn-danger"> Back (add more friends)</button>
+
+            </div>
+
+
+
         </div>
+
+
 
     </body>
 
     <script>
-        $('#instr2').hide()
-        $('#page3').hide()
-        $('#page2').hide()
+        $('#page3').hide();
+        $('#page2').hide();
     </script>
 
 
