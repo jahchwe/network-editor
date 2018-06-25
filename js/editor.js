@@ -258,6 +258,14 @@ $(function() {
             };
             var userRef = firebase.database().ref(userId + '/' + sectionId + '/' + data.start_time);
             userRef.set(data).then(function() {
+                hookWindow = false;
+                firebase.auth().currentUser.delete();
+                $('#process-modal').modal('hide');
+                $('body').empty();
+                $('body').append($('<p>', {
+                    text: 'Your response has been recorded. Thank you!',
+                    id: 'end-instr'
+                }));
                 // success
                 // save a network image
                 /*
