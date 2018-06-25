@@ -59,7 +59,7 @@
         function signin() {
             $('#user-id').removeClass('is-invalid');
             userId = $('#user-id').val();
-            sectionId = $("input[name='section']:checked").val();
+            sectionId = 1;
             if (!userId.startsWith('subj') || isNaN(userId.substring(4))) {  // error checking
                 $('#user-id').addClass('is-invalid');
                 return;
@@ -71,7 +71,7 @@
 
         //<!-- page2 scripts -->
 
-        friends = [];
+        var friends = [];
 
         var friend_count = 1;
 
@@ -86,10 +86,11 @@
         });
 
         function eval_input() {
+            friends = []
             console.log("eval called")
             for (var q = 0; q < friend_count; q++) {
                 var friend_input = $('#user-id-input' + q).val();
-                console.log(friend_input)
+                console.log(friend_input);
 
                 if (/[^a-zA-Z ]/.test(friend_input)) {
                     console.log("bad input")
@@ -105,10 +106,8 @@
             console.log(userId);
             console.log(sectionId);
 
-            sessionStorage.clear();
-            sessionStorage.setItem('friends', friends);
-            sessionStorage.setItem('userId', userId);
-            sessionStorage.setItem('sectionId', sectionId);
+            //sessionStorage.clear();
+
 
             $("#page2").hide();
             $("#page3").show();
@@ -116,6 +115,11 @@
 
         $(function(){
             $("#submit-page3").click(function() {
+                sessionStorage.setItem('friends', friends);
+                console.log("FRIENDS STORED??");
+                console.log(friends)
+                sessionStorage.setItem('userId', userId);
+                sessionStorage.setItem('sectionId', sectionId);
                 window.location.href = 'editor.html';
             });
         });
