@@ -6,10 +6,10 @@ $(function() {
 
     var userId = sessionStorage.getItem('userId');
     var sid = userId.substring(4);
-    var sectionId = sessionStorage.getItem('sectionId')
-    var friends_unsplit = sessionStorage.getItem('friends')
+    var sectionId = sessionStorage.getItem('sectionId');
+    var friends_unsplit = sessionStorage.getItem('friends');
 
-    console.log(friends)
+    console.log("firneds:" + friends_unsplit);
     console.log(userId)
     console.log(sid)
     console.log(sectionId)
@@ -29,15 +29,14 @@ $(function() {
 
 
 
-    if (userId.length < 5 || userId.length > 8 || !userId.startsWith('ucla') ||
+    if (userId.length < 5 || userId.length > 8 || !userId.startsWith('subj') ||
         isNaN(sid) || isNaN(sectionId)) {
         $('body').empty();
         return;
     }
     sid = parseInt(sid);
     var nodeName = sid % 2 === 0 ? 'person' : 'airport';
-    $('#instr').html('Click "Add Connection" to add connections between ' + (sid % 2 === 0 ? 'people' : 'airports') +
-    '.<br/><br/>Click on a connection to edit or remove it.');
+    $('#instr').html('Click "Add Connection" to add connections between people.<br/><br/>Click on a connection to edit or remove it.');
 
     // prevent closing window
     window.onbeforeunload = function() {
