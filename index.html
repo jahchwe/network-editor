@@ -71,7 +71,7 @@
 
         //<!-- page2 scripts -->
 
-        friends = []
+        friends = [];
 
         var friend_count = 1;
 
@@ -94,6 +94,7 @@
                 if (/[^a-zA-Z ]/.test(friend_input)) {
                     console.log("bad input")
                     $('#user-id-input' + q).addClass('is-invalid');
+                    friends = [];
                     return;
                 }
 
