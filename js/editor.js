@@ -35,8 +35,8 @@ $(function() {
         return;
     }
     sid = parseInt(sid);
-    var nodeName = sid % 2 === 0 ? 'person' : 'airport';
-    $('#instr').html('Click "Add Connection" to add connections between people.<br/><br/>Click on a connection to edit or remove it.');
+    var nodeName = 'person';
+    $('#instr').html('Click "Add Connection" to add connections between people. Draw connections between people who regularly socialize with each other. <br/><br/>Click on a connection to edit or remove it. <br/><br/>Once you are finished drawing all the connections between these people, click "Submit."');
 
     // prevent closing window
     window.onbeforeunload = function() {
