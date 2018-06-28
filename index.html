@@ -53,10 +53,12 @@
         }
 
         #info-form1 {
-            width: 20%;
+            width: 30%;
             margin: auto;
+        }
 
-
+        #help-block {
+          position: absolute;
         }
 
 
@@ -89,7 +91,7 @@
         $(function() {
           $('#add_friends').click(function() {
               console.log("add")
-              $('#friends_list').append("<div id='user-id-group" + friend_count + "' class='form-group'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + " (first name, last initial)</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' required> </div>");
+              $('#friends_list').append("<div id='user-id-group" + friend_count + "' class='form-group has-success'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + " (first name, last initial)</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' required> </div>");
               friend_count+=1;
               console.log(friend_count);
 
@@ -107,6 +109,7 @@
                 if (/[^a-zA-Z ]/.test(friend_input) || friends.indexOf(friend_input) != -1) {
                     console.log("bad input")
                     $('#user-id-input' + q).addClass('is-invalid');
+                    $('#instr-text-change').css({color:'red'});
                     friends = [];
                     return;
                 }
@@ -190,7 +193,7 @@
                 <p id="instr-text"> Consider all the people with whom you like to spend your free time. <b> Since you arrived at Columbia, who are the people whom you have been with most often for informal social activities, such as going out to lunch, dinner, drinks, exercising or studying together, hanging out in each other’s rooms and/or homes, and so on? </b> </p>
                 <p id="instr-text"> Once you’ve entered a name, click the green <b>‘Add friend’ </b> button to enter another. There is no limit to the number of people you can name, so please list all the people with whom you socialize regularly. Order does not matter. </p>
                 <p id="instr-text"> Once you’re finished adding names, click the blue <b> ‘Submit’ </b> button. </p>
-                <p id="instr-text" style="color:red"> <b> Please only enter letters and make sure each entry is unique. </b> </p>
+                <p id="instr-text-change"> <b> Please only enter letters and spaces and make sure each entry is unique. </b> </p>
 
             </div>
 
