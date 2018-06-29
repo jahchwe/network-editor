@@ -23,30 +23,27 @@
             top: 35%;
             left: 40%;
         }
-        .submit_page1 {
+        .submit-page1 {
             margin-top: 20px;
             margin-bottom: 20px;
             margin-right: 20px;
-        }
-        #section-group .radio {
-            margin-left: 5px;
         }
         .instr {
             margin: auto;
             margin-bottom: 20px;
             width: 600px;
-            margin-top: 10vh;
+            margin-top: 8vh;
         }
 
-        #add_friends {
+        #add-friends {
             margin-right: 20px;
         }
 
-        #friends_list {
+        #friends-list {
             margin-top: auto;
         }
 
-        #remove_friend {
+        #remove-friend {
             margin-top: 20px;
             margin-bottom: 20px;
             margin-right: 20px;
@@ -61,23 +58,76 @@
           position: absolute;
         }
 
-
     </style>
+
+    <body>
+        <div id="page1"
+            <div id="info1">
+                <div id="info-form" class="survey" data-toggle="validator" role="form">
+                    <form action="javascript:signin();" class="form-horizontal">
+                        <div id="user-id-group" class="form-group">
+                            <label id="user-id-text" class="control-label" for="user-id">ID</label>
+                            <input id="user-id" type="text" class="form-control input-md" required>
+                        </div>
+                        <button id="submit-page1" type="submit" class="btn btn-primary submit-page1">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="page2">
+            <div id="instr1" class="instr">
+                <p id="instr-text"> Consider all the people with whom you like to spend your free time. <b> Since you arrived at Columbia, who are the people whom you have been with most often for informal social activities, such as going out to lunch, dinner, drinks, exercising or studying together, hanging out in each other’s rooms and/or homes, and so on? </b> </p>
+                <p id="instr-text"> Once you’ve entered a name, click the green <b>"Add friend"</b> button to enter another. There is no limit to the number of people you can name, so please list all the people with whom you socialize regularly. Order does not matter. </p>
+                <p id="instr-text"> Once you’re finished adding names, click the blue <b>"Submit"</b> button. </p>
+                <p id="instr-text-change"> <b> Please only enter letters and spaces and make sure each entry is unique. </b> </p>
+
+            </div>
+
+            <div id="info2">
+                <div id="info-form1" class="survey" data-toggle="validator" role="form">
+                    <form action = "javascript:eval_input()" class="form-horizontal">
+                        <div id="friends_input">
+                            <div id="friends-list">
+                                <div id="user-id-group0" class="form-group">
+                                    <label id="user-id-text" class="control-label" for="user-id">Friend 1 (first name, last initial)</label>
+                                    <input id="user-id-input0" type="text" class="form-control input-md" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="add-friends" type="button" class="btn btn-success add-btn">Add friend</button>
+                        <button id="remove-friend" type="button" class="btn btn-danger">Remove last friend</button>
+                        <button id="submit-page2" type="submit" class="btn btn-primary submit-page2">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="page3">
+            <div id="instr2" class="instr">
+                <p id="instr-text"> Thank you! On the next page, you will be asked to draw the connections between the friends you named. That is, you will use connections to show who is friends with whom (i.e., who regularly socializes with whom). </p>
+                <p id="instr-text"> Press start whenever you are ready for the next task. </p>
+                <p id="instr-text"> If you wish to add more friends, press <b>"Back"</b> at this time. </p>
+
+                <button id="submit-page3" type="submit" class = "btn btn-primary submit-page3">Start</button>
+                <button id="back" type="submit" class = "btn btn-danger">Back (add more friends)</button>
+
+            </div>
+        </div>
+    </body>
 
     <script type="text/javascript">
 
         //<!-- page 1 scripts -->
 
-        var userId = null, sectionId = null;
+        var userId = null;
         function signin() {
             $('#user-id').removeClass('is-invalid');
             userId = $('#user-id').val();
-            sectionId = 1;
             if (!userId.startsWith('subj') || isNaN(userId.substring(4))) {  // error checking
                 $('#user-id').addClass('is-invalid');
                 return;
             }
-            //$('#instr-text').text(instrText[parseInt(userId.substring(4)) % 2]);
             $('#page1').hide();
             $('#page2').show();
         }
@@ -85,13 +135,12 @@
         //<!-- page2 scripts -->
 
         var friends = [];
-
         var friend_count = 1;
 
         $(function() {
-          $('#add_friends').click(function() {
+          $('#add-friends').click(function() {
               console.log("add")
-              $('#friends_list').append("<div id='user-id-group" + friend_count + "' class='form-group has-success'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + " (first name, last initial)</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' required> </div>");
+              $('#friends-list').append("<div id='user-id-group" + friend_count + "' class='form-group has-success'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + " (first name, last initial)</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' required> </div>");
               friend_count+=1;
               console.log(friend_count);
 
@@ -119,128 +168,36 @@
 
             console.log(friends);
             console.log(userId);
-            console.log(sectionId);
 
             //sessionStorage.clear();
-
 
             $("#page2").hide();
             $("#page3").show();
         }
 
-        $(function(){
-            $("#submit-page3").click(function() {
-                sessionStorage.setItem('friends', friends);
-                console.log("FRIENDS STORED??");
-                console.log(friends)
-                sessionStorage.setItem('userId', userId);
-                sessionStorage.setItem('sectionId', sectionId);
-                window.location.href = 'editor.html';
-            });
+        $("#submit-page3").click(function() {
+            sessionStorage.setItem('friends', friends);
+            console.log("FRIENDS STORED??");
+            console.log(friends)
+            sessionStorage.setItem('userId', userId);
+            window.location.href = 'editor.html';
         });
 
-        $(function() {
-            $("#back").click(function(){
-                $("#page3").hide();
-                $("#page2").show();
-            });
+        $("#back").click(function() {
+            $("#page3").hide();
+            $("#page2").show();
         });
 
-        $(function(){
-            $("#remove_friend").click(function() {
-                if (friend_count>1) {
-                    $('#user-id-group' + (friend_count -1) ).remove();
-                    friend_count = friend_count - 1;
-                    console.log("remove: " + friend_count)
-                }
-            });
+        $("#remove-friend").click(function() {
+            if (friend_count > 1) {
+                $('#user-id-group' + (friend_count - 1) ).remove();
+                friend_count = friend_count - 1;
+                console.log("remove: " + friend_count)
+            }
         });
 
-    </script>
-
-    <body>
-
-        <div id="page1"
-            <div id="info1">
-                <div id="info-form" class="survey" data-toggle="validator" role="form">
-                    <form action="javascript:signin();" class="form-horizontal">
-                        <div id="user-id-group" class="form-group">
-                            <label id="user-id-text" class="control-label" for="user-id">ID</label>
-                            <input id="user-id" type="text" class="form-control input-md" required>
-                        </div>
-                        <div id="section-group" class="form-group">
-                            <!--
-                            <label id="user-id-text" class="control-label">Section</label>
-
-                            <div class="row">
-                                <div class="radio col-auto">
-                                    <input name="section" type="radio" value="1" required> 1
-                                </div>
-                                <div class="radio col">
-                                    <input name="section" type="radio" value="2"> 2
-                                </div>
-                            </div>
-                            --->
-                        </div>
-                        <button id="submit-page1" type="submit" class="btn btn-primary submit_page1">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div id="page2">
-            <div id="instr1" class = "instr">
-                <p id="instr-text"> Consider all the people with whom you like to spend your free time. <b> Since you arrived at Columbia, who are the people whom you have been with most often for informal social activities, such as going out to lunch, dinner, drinks, exercising or studying together, hanging out in each other’s rooms and/or homes, and so on? </b> </p>
-                <p id="instr-text"> Once you’ve entered a name, click the green <b>‘Add friend’ </b> button to enter another. There is no limit to the number of people you can name, so please list all the people with whom you socialize regularly. Order does not matter. </p>
-                <p id="instr-text"> Once you’re finished adding names, click the blue <b> ‘Submit’ </b> button. </p>
-                <p id="instr-text-change"> <b> Please only enter letters and spaces and make sure each entry is unique. </b> </p>
-
-            </div>
-
-            <div id="info2">
-                <div id="info-form1" class="survey" data-toggle="validator" role="form">
-                    <form action = "javascript:eval_input()" class="form-horizontal">
-                        <div id="friends_input">
-                            <div id="friends_list">
-                                <div id="user-id-group0" class="form-group">
-                                    <label id="user-id-text" class="control-label" for="user-id">Friend 1 (first name, last initial)</label>
-                                    <input id="user-id-input0" type="text" class="form-control input-md" required>
-                                </div>
-                            </div>
-                        </div>
-                        <button id="add_friends" type="button" class="btn btn-success add-btn">Add friend</button>
-                        <button id="remove_friend" type="button" class="btn btn-danger"> Remove friend </button>
-                        <button id="submit-page2" type="submit" class="btn btn-primary submit_page2">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div id="page3">
-            <div id="instr2" class="instr">
-                <p id="instr-text"> Thank you! On the next page, you will be asked to draw the connections between the friends you named. That is, you will use connections to show who is friends with whom (i.e., who regularly socializes with whom). </p>
-                <p id="instr-text"> Press start whenever you are ready for the next task. </p>
-                <p id="instr-text"> If you wish to add more friends, press <b>"Back"</b> at this time. </p>
-
-                <button id="submit-page3" type="submit" class = "btn btn-primary submit_page3"> Start </button>
-                <button id="back" type="submit" class = "btn btn-danger"> Back (add more friends)</button>
-
-            </div>
-
-
-
-        </div>
-
-
-
-    </body>
-
-    <script>
         $('#page3').hide();
         $('#page2').hide();
     </script>
-
-
-
 
 </html>

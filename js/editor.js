@@ -1,36 +1,19 @@
 var hookWindow = false;
+var network = null;
 
 $(function() {
     'use strict';
 
-
     var userId = sessionStorage.getItem('userId');
     var sid = userId.substring(4);
-    var sectionId = sessionStorage.getItem('sectionId');
     var friends_unsplit = sessionStorage.getItem('friends');
 
-    console.log("firneds:" + friends_unsplit);
+    console.log("friends: " + friends_unsplit);
     console.log(userId)
-    console.log(sid)
-    console.log(sectionId)
 
     var friends = friends_unsplit.split(",")
-    // parse id in URL
-    /*
-    var userId = '';
-    var sid = null, sectionId = null;
-    var parameters = window.location.search.substring(1);
-    if (parameters.length > 17 && parameters.length < 21) {
-        userId = parameters.split(/[&=]/)[1];
-        sid = userId.substring(4);
-        sectionId = parameters[parameters.length - 1];
-    }
-    */
 
-
-
-    if (userId.length < 5 || userId.length > 8 || !userId.startsWith('subj') ||
-        isNaN(sid) || isNaN(sectionId)) {
+    if (!userId.startsWith('subj') || isNaN(sid)) {
         $('body').empty();
         return;
     }
@@ -47,29 +30,26 @@ $(function() {
 
     // Initialize Firebase
     var config = {
-      apiKey: "AIzaSyAd8PYP5oRCJ_jcohHso0i-3BAlbxETwIo",
-      authDomain: "network-editor-columbia.firebaseapp.com",
-      databaseURL: "https://network-editor-columbia.firebaseio.com",
-      projectId: "network-editor-columbia",
-      storageBucket: "",
-      messagingSenderId: "17102557397"
+        apiKey: "AIzaSyAd8PYP5oRCJ_jcohHso0i-3BAlbxETwIo",
+        authDomain: "network-editor-columbia.firebaseapp.com",
+        databaseURL: "https://network-editor-columbia.firebaseio.com",
+        projectId: "network-editor-columbia",
+        storageBucket: "network-editor-columbia.appspot.com",
+        messagingSenderId: "17102557397"
     };
     firebase.initializeApp(config);
 
     // construct network
-    var IMG_DIR = 'img/'
-    var initial_nodes = [];
-    var network = null;
+    var network_nodes = [], network_edges = [], options = null;
 
     for (var i = 0; i < friends.length; ++i) {
-        initial_nodes.push({
+        network_nodes.push({
             id: i,
             label: friends[i],
-            //image: IMG_DIR + subject_imgs[sid][sectionId][i][0],
             shape: 'circle'
         });
     }
-    var data = {nodes: new vis.DataSet(initial_nodes), edges: []};
+    var data = {nodes: new vis.DataSet(network_nodes), edges: []};
 
     function destroy() {
         if (network !== null) {
@@ -83,7 +63,7 @@ $(function() {
 
         // create a network
         var container = document.getElementById('network-wrapper');
-        var options = {
+        options = {
             locale: 'custom',
             locales: {
                 'custom': {
@@ -124,7 +104,7 @@ $(function() {
                         network.getConnectedNodes(data.from).indexOf(data.to) == -1) {
                         // not the same node and the two nodes are not connected
                         callback(data);
-                        $('#submit').removeClass('disabled');
+                        network_edges.push(data);
                     }
                     network.addEdgeMode();
                 },
@@ -163,8 +143,7 @@ $(function() {
                     color: '#eeeeee',
                     strokeWidth: 5,
                     strokeColor: 'rgba(0, 0, 0, 0.8)',
-                    size: 20,
-                    vadjust: -8
+                    size: 20
                 },
                 borderWidth: 0,
                 size: 60,
@@ -203,7 +182,6 @@ $(function() {
                 }
             }
         }
-        data = {nodes: new vis.DataSet(initial_nodes), edges: []};
         network = new vis.Network(container, data, options);
         network.on('stabilized', function(params) {
             network.fit({ animation: {duration: 500} });
@@ -216,7 +194,6 @@ $(function() {
     // set up buttons
     $('#reset').click(function() {
         draw();
-        $('#submit').addClass('disabled');
     });
 
     $('#submit').click(function() {
@@ -236,13 +213,12 @@ $(function() {
             elem.connections = network.getConnectedNodes(index);
         });
 
-        // showing node IDs
-        var labeled_nodes = Object.assign([], initial_nodes);  // make copy
-        for (var i = 0; i < initial_nodes.length; ++i) {
-            labeled_nodes[i].label = labeled_nodes[i].id + '\n\n\n\n' + labeled_nodes[i].label;
+        // show node IDs
+        var labeled_nodes = Object.assign([], network_nodes);  // make copy
+        for (var i = 0; i < network_nodes.length; ++i) {
+            labeled_nodes[i].label = labeled_nodes[i].id.toString();
         }
         data.nodes.update(labeled_nodes);
-        network.setOptions({ nodes: { font: { vadjust: -80 } } });
 
         // send data
         firebase.auth().signInAnonymously().then(function(user) {
@@ -256,24 +232,15 @@ $(function() {
                 duration: endTime.getTime() - startTime.getTime(),
                 data: nodes
             };
-            var userRef = firebase.database().ref(userId + '/' + sectionId + '/' + data.start_time);
+            var userRef = firebase.database().ref(userId + '/' + data.start_time);
             userRef.set(data).then(function() {
-                hookWindow = false;
-                firebase.auth().currentUser.delete();
-                $('#process-modal').modal('hide');
-                $('body').empty();
-                $('body').append($('<p>', {
-                    text: 'Your response has been recorded. Thank you!',
-                    id: 'end-instr'
-                }));
                 // success
                 // save a network image
-                /*
                 var canvas = $('.vis-network canvas')[0];
 
                 canvas.toBlob(function(blob) {
                     var storageRef = firebase.storage().ref();
-                    var path = userId + '_' + sectionId + '_' + startTime.toString() + '.png';
+                    var path = userId + '_' + startTime.toString() + '.png';
                     storageRef.child(path).put(blob).then(function() {
                         hookWindow = false;
                         firebase.auth().currentUser.delete();
@@ -287,10 +254,9 @@ $(function() {
                         hookWindow = false;
                         firebase.auth().currentUser.delete();
                         $('#process-modal').modal('hide');
-                        alert('The response has been recorded, but the image failed to save. Please right click on the image and save it, or find the experimenter. Thank you!');
+                        alert('The response has been recorded, but the image failed to save. Please let the experimenter know. Thank you!');
                     });
                 });
-                */
             }, function() {
                 $('#process-modal').modal('hide');
                 alert('Error: cannot connect to Firebase');
