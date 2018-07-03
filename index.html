@@ -67,7 +67,7 @@
                     <form action="javascript:signin();" class="form-horizontal">
                         <div id="user-id-group" class="form-group">
                             <label id="user-id-text" class="control-label" for="user-id">ID</label>
-                            <input id="user-id" type="text" class="form-control input-md" required>
+                            <input id="user-id" type="text" class="form-control input-md" autocomplete="off" required>
                         </div>
                         <button id="submit-page1" type="submit" class="btn btn-primary submit-page1">Submit</button>
                     </form>
@@ -91,7 +91,7 @@
                             <div id="friends-list">
                                 <div id="user-id-group0" class="form-group">
                                     <label id="user-id-text" class="control-label" for="user-id">Friend 1 (first name, last initial)</label>
-                                    <input id="user-id-input0" type="text" class="form-control input-md" required>
+                                    <input id="user-id-input0" type="text" class="form-control input-md" autocomplete="off" required>
                                 </div>
                             </div>
                         </div>
@@ -114,90 +114,100 @@
 
             </div>
         </div>
-    </body>
 
-    <script type="text/javascript">
+        <script type="text/javascript">
 
-        //<!-- page 1 scripts -->
+            //<!-- page 1 scripts -->
 
-        var userId = null;
-        function signin() {
-            $('#user-id').removeClass('is-invalid');
-            userId = $('#user-id').val();
-            if (!userId.startsWith('subj') || isNaN(userId.substring(4))) {  // error checking
-                $('#user-id').addClass('is-invalid');
-                return;
-            }
-            $('#page1').hide();
-            $('#page2').show();
-        }
-
-        //<!-- page2 scripts -->
-
-        var friends = [];
-        var friend_count = 1;
-
-        $(function() {
-          $('#add-friends').click(function() {
-              console.log("add")
-              $('#friends-list').append("<div id='user-id-group" + friend_count + "' class='form-group has-success'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + " (first name, last initial)</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' required> </div>");
-              friend_count+=1;
-              console.log(friend_count);
-
-          });
-        });
-
-        function eval_input() {
-            friends = []
-            console.log("eval called")
-            for (var q = 0; q < friend_count; q++) {
-                var friend_input = $('#user-id-input' + q).val();
-                console.log(friends)
-                console.log(friend_input in friends)
-
-                if (/[^a-zA-Z ]/.test(friend_input) || friends.indexOf(friend_input) != -1) {
-                    console.log("bad input")
-                    $('#user-id-input' + q).addClass('is-invalid');
-                    $('#instr-text-change').css({color:'red'});
-                    friends = [];
+            var userId = null;
+            function signin() {
+                $('#user-id').removeClass('is-invalid');
+                userId = $('#user-id').val();
+                if (!userId.startsWith('subj') || isNaN(userId.substring(4))) {  // error checking
+                    $('#user-id').addClass('is-invalid');
                     return;
                 }
-
-                friends.push(friend_input);
+                $('#page1').hide();
+                $('#page2').show();
             }
 
-            console.log(friends);
-            console.log(userId);
+            //<!-- page2 scripts -->
 
-            //sessionStorage.clear();
+            var friends = [];
+            var friend_count = 1;
 
-            $("#page2").hide();
-            $("#page3").show();
-        }
+            $('#add-friends').click(function() {
+                console.log("add")
+                $('#friends-list').append("<div id='user-id-group" + friend_count + "' class='form-group has-success'> <label id='user-id-text' class='control-label' for='user-id'>Friend " + (friend_count + 1) + " (first name, last initial)</label> <input id='user-id-input" + friend_count + "' type='text' class='form-control input-md' autocomplete='off' required> </div>");
+                $('#user-id-group' + friend_count + ' input').on('change invalid', on_friend_input_change);
+                friend_count += 1;
+            });
 
-        $("#submit-page3").click(function() {
-            sessionStorage.setItem('friends', friends);
-            console.log("FRIENDS STORED??");
-            console.log(friends)
-            sessionStorage.setItem('userId', userId);
-            window.location.href = 'editor.html';
-        });
-
-        $("#back").click(function() {
-            $("#page3").hide();
-            $("#page2").show();
-        });
-
-        $("#remove-friend").click(function() {
-            if (friend_count > 1) {
-                $('#user-id-group' + (friend_count - 1) ).remove();
-                friend_count = friend_count - 1;
-                console.log("remove: " + friend_count)
+            function on_friend_input_change() {
+                this.setCustomValidity('');
+                $(this).removeClass('is-invalid');
+                if (/[^a-zA-Z ]/.test($(this).val())) {
+                    $(this).addClass('is-invalid');
+                    this.setCustomValidity('Please enter letters and spaces only.');
+                    return;
+                }
+                var friends_input = [];
+                $('#info-form1 input[type=text]').each(function() {
+                    if ($(this).val().length == 0) {
+                        return;  // user has not finished yet
+                    }
+                    var this_friend = $(this).val().trim();
+                    if (friends_input.indexOf(this_friend) != -1) {
+                        $(this).addClass('is-invalid');
+                        this.setCustomValidity('Please make sure each entry is unique.');
+                        return;
+                    }
+                    friends_input.push(this_friend);
+                });
             }
-        });
+            $('#info-form1 input[type=text]').on('change invalid', on_friend_input_change);
 
-        $('#page3').hide();
-        $('#page2').hide();
-    </script>
+            function eval_input() {
+                console.log("eval called")
+
+                $('#info-form1 input[type=text]').each(function() {
+                    if ($(this).hasClass('is-invalid')) {
+                        return;
+                    }
+                    friends.push($(this).val());
+                });
+
+                console.log(friends);
+
+                $("#page2").hide();
+                $("#page3").show();
+            }
+
+            $("#submit-page3").click(function() {
+                sessionStorage.setItem('friends', friends);
+                console.log("FRIENDS STORED??");
+                console.log(friends)
+                sessionStorage.setItem('userId', userId);
+                window.location.href = 'editor.html';
+            });
+
+            $("#back").click(function() {
+                $("#page3").hide();
+                $("#page2").show();
+            });
+
+            $("#remove-friend").click(function() {
+                if (friend_count > 1) {
+                    $('#user-id-group' + (friend_count - 1) ).remove();
+                    friend_count = friend_count - 1;
+                    console.log("remove: " + friend_count)
+                }
+            });
+
+            $('#page3').hide();
+            $('#page2').hide();
+        </script>
+
+    </body>
 
 </html>
