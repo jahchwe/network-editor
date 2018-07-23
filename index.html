@@ -123,12 +123,15 @@
             function signin() {
                 $('#user-id').removeClass('is-invalid');
                 userId = $('#user-id').val();
-                if (!userId.startsWith('subj') || isNaN(userId.substring(4))) {  // error checking
+                // error checking
+                if ((userId.startsWith('subj') && !isNaN(userId.substring(4))) ||
+                    (userId.startsWith('SM') && !isNaN(userId.substring(2)))) {
+                    $('#page1').hide();
+                    $('#page2').show();
+                } else {
                     $('#user-id').addClass('is-invalid');
                     return;
                 }
-                $('#page1').hide();
-                $('#page2').show();
             }
 
             //<!-- page2 scripts -->

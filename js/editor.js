@@ -5,7 +5,17 @@ $(function() {
     'use strict';
 
     var userId = sessionStorage.getItem('userId');
-    var sid = userId.substring(4);
+    var sid;
+    if (userId.startsWith('subj')) {
+        sid = userId.substring(4);
+    } else if (userId.startsWith('SM')) {
+        sid = userId.substring(2);
+    }
+    if (isNaN(sid)) {
+        alert('Invalid user ID');
+        $('body').empty();
+        return;
+    }
     var friends_unsplit = sessionStorage.getItem('friends');
 
     console.log("friends: " + friends_unsplit);
@@ -13,10 +23,6 @@ $(function() {
 
     var friends = friends_unsplit.split(",")
 
-    if (!userId.startsWith('subj') || isNaN(sid)) {
-        $('body').empty();
-        return;
-    }
     sid = parseInt(sid);
     var nodeName = 'person';
     $('#instr').html('Click "Add Connection" to add connections between people. Draw connections between people who regularly socialize with each other. <br/><br/>Click on a connection to edit or remove it. <br/><br/>Once you are finished drawing all the connections between these people, click "Submit."');
